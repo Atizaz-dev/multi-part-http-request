@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Concurrent Download Demo</title>
+    <script src="multi-thread-download.js"></script>
+  </head>
+  <body>
+    <p>
+      File URL：<input
+        type="text"
+        id="fileUrl"
+        value="https://portal.arthur.digital/webgl/Build/WebGL_Arthur.data"
+      />
+    </p>
+    <div>
+      <h3>Concurrent Download Demo</h3>
+      <button onclick="multiThreadedDownload()">Download</button>
+    </div>
+    <script>
+      function multiThreadedDownload() {
+        const url = document.querySelector("#fileUrl").value;
+        if (!url || !/https?/.test(url)) return;
+        console.log("Start: " + +new Date());
+        download({
+          url,
+          chunkSize: 10 * 1000 * 1000,
+          poolLimit: 3,
+        }).then((buffers) => {
+          console.log("End: " + +new Date());
+          saveAs({ buffers, name: "my-zip-file", mime: "application/zip" });
+        });
+      }
+    </script>
+  </body>
+</html>
